@@ -8,6 +8,8 @@ library(gapminder)
 
 app <- Dash$new(external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css")
 
+app <- Dash$new(external_stylesheets = "https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css")
+
 df <- read_csv("./data/aac_data_cleaned.csv")
 
 yearMarks <- map(unique(df$intake_year), as.character)
@@ -85,11 +87,11 @@ make_graph_plot2 <- function(year = c(2014, 2015),
   p <- ggplot(data_intake_animal, aes(y=count, x=intake_weekday)) + 
     geom_bar(position="dodge", stat="identity", fill="dodgerblue3") +
     labs(title = title, x = "Week day") +
-    theme(plot.title = element_text(size = 20, face = "bold",hjust = 0.5),
-          axis.text.x = element_text(size = 12, angle = 45),
-          axis.title.x = element_text(size = 20),
-          axis.title.y = element_text(size = 20),
-          axis.text.y = element_text(size = 14),
+    theme(plot.title = element_text(size = 10, face = "bold",hjust = 0.5),
+          axis.text.x = element_text(size = 8, angle = 45),
+          axis.title.x = element_text(size = 10),
+          axis.title.y = element_text(size = 10),
+          axis.text.y = element_text(size = 8),
           panel.background = element_blank()) 
   
   ggplotly(p)
@@ -132,11 +134,11 @@ make_graph_plot3 <- function(year = c(2014, 2015),
   p <- ggplot(data_outtake_animal, aes(y=count, x=intake_weekday)) + 
     geom_bar(position="dodge", stat="identity", fill="dodgerblue3") +
     labs(title = title, x = "Week day") +
-    theme(plot.title = element_text(size = 20, face = "bold",hjust = 0.5),
-          axis.text.x = element_text(size = 12, angle = 45),
-          axis.title.x = element_text(size = 20),
-          axis.title.y = element_text(size = 20),
-          axis.text.y = element_text(size = 14),
+    theme(plot.title = element_text(size = 10, face = "bold",hjust = 0.5),
+          axis.text.x = element_text(size = 8, angle = 45),
+          axis.title.x = element_text(size = 10),
+          axis.title.y = element_text(size = 10),
+          axis.text.y = element_text(size = 8),
           panel.background = element_blank()) 
   
   ggplotly(p)
@@ -155,27 +157,76 @@ graph_3 <- dccGraph(
 )
 
 app$layout(
+  
   htmlDiv(
     list(
-      htmlH1('Dash Demo plot2 an dplot 3'),
-      #selection components
-      htmlLabel('Select a year range:'),
+      # Row 0
+      htmlCenter(htmlLabel('Select a year range:')),
       yearSlider,
-      htmlIframe(height=15, width=10, style=list(borderWidth = 0)), #space
-      htmlLabel('Select month:'),
-      monthDropdown,
-      htmlLabel('Select Animal Type:'),
-      animalDropdown,
-      #graph and table
-      htmlLabel('Graph2'),
-      graph_2, 
-      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
-      htmlLabel('Graph3'),
-      graph_3
+      htmlBr(),
+      htmlBr(),
+      # Row 1
+      htmlDiv(                    
+        list(
+          htmlDiv(
+            list(
+              graph_2,
+              htmlBr()
+            ),
+            class="col-4"
+          ),
+          htmlDiv(
+            list(
+              htmlLabel('Select Animal Type:'),
+              animalDropdown
+            ),
+            class="col-2"
+          ),
+          htmlDiv(
+            list(
+              htmlLabel('Select month:'),
+              monthDropdown
+            ),
+            class="col-2"
+          ),
+          htmlDiv(
+            list(
+              graph_3,
+              htmlBr()
+            ),
+            class="col-4"
+          )
+        ),
+        class="row"
+      )
       
-    )
+    ),
+    class="container"
   )
 )
+
+#app$layout(
+#  htmlDiv(
+#    list(
+#      htmlH1('Dash Demo plot2 an dplot 3'),
+#      #selection components
+#      htmlLabel('Select a year range:'),
+#      yearSlider,
+#      htmlIframe(height=15, width=10, style=list(borderWidth = 0)), #space
+#      htmlLabel('Select month:'),
+#      monthDropdown,
+#      htmlLabel('Select Animal Type:'),
+#      animalDropdown,
+#      #graph and table
+#      htmlLabel('Graph2'),
+#      graph_2, 
+#      htmlIframe(height=20, width=10, style=list(borderWidth = 0)), #space
+#      htmlLabel('Graph3'),
+#      graph_3
+#      
+#    ), style = list('columnCount' = 2)
+#  )
+#)
 
 app$callback(
   #update figure of graph2
@@ -204,5 +255,4 @@ app$callback(
 
 
 
-#app$run_server()
-app$run_server(host = "0.0.0.0", port = Sys.getenv('PORT', 8050))
+app$run_server()
